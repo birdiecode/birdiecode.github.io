@@ -1,0 +1,529 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head><meta charset="UTF-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"><title>Быстрая установка Windows · birdiecode</title><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="description" content="Домашняя страница где я публикую свои заметки.
+"><meta name="generator" content="Jekyll (using style of GitBook 3.2.3)"><meta name="author" content="birdiecode"><link rel="stylesheet" href="/assets/gitbook/style.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-fontsettings/website.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-search-pro/search.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+
+<link rel="stylesheet" href="/assets/gitbook/rouge/colorful.css">
+
+<link rel="stylesheet" href="/assets/gitbook/custom.css">
+
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/gitbook/images/apple-touch-icon-precomposed-152.png">
+<link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+
+
+
+
+            <link rel="prev" href="/" />
+        
+
+        
+    </head>
+    <body>
+        <div class="book"><div class="book-summary">
+    <nav role="navigation">
+        <div id="book-search-input" role="search">
+            <input type="text" placeholder="Type to search" />
+        </div>
+        <div id="book-search-input-link" role="search">
+            <a href="/assets/search.html">Click to Search</a>
+        </div>
+        <ul class="summary">
+            
+            <li class="chapter" data-level="1.1" data-path="">
+            
+                <a href="/">
+                    birdiecode
+                </a>
+            </li>
+
+            <li class="divider"></li>
+
+            
+                <!-- <p>pages</p> -->
+                
+                    
+
+                    
+                        
+                        <li class="chapter" data-level="1.1" data-path="/pages/contact/">
+                        
+                            <a href="/pages/contact/">
+                                Контакты
+                            </a>
+                            
+                                
+                            
+                        </li>
+                    
+
+                    
+                        <li class="divider"></li>
+                    
+                
+            
+                <!-- <p>posts</p> -->
+                
+                    
+
+                    
+                        
+                        <li class="chapter active" data-level="1.2" data-path="/windows/2019-04-27-quick-windows-installation.html">
+                        
+                            <a href="/windows/2019-04-27-quick-windows-installation.html">
+                                Быстрая установка Windows
+                            </a>
+                            
+                                
+                                    <ul><li><a href="#создание-winpe-окружения">Создание WinPE окружения</a></li><li><a href="#получаем-файл-installwim">Получаем файл install.wim</a></li><li><a href="#редактируем-файл-bootwim">Редактируем файл boot.wim</a></li><li><a href="#создаём-installcmd">Создаём install.cmd</a></li><li><a href="#создание-загрузочного-насителя">Создание загрузочного насителя</a><ul><li><a href="#usb-накопителя">USB-накопителя</a></li><li><a href="#iso-образ">ISO образ</a></li></ul></li><li><a href="#ресурсы-что-я-использовал">ресурсы что я использовал</a></li></ul>
+
+                                
+                            
+                        </li>
+                    
+
+                    
+                        <li class="divider"></li>
+                    
+                
+            
+
+            <li>
+                <a href="https://t.me/git_push_main" target="blank" class="gitbook-link">
+                    Сказать спасибо
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<div class="book-body">
+                <div class="book-header" role="navigation">
+                    <!-- Title -->
+                    <h1>
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
+                        
+                            <a href="." >Быстрая установка Windows</a>
+                        
+                    </h1>
+                </div>
+
+                <div class="body-inner"><div class="page-wrapper" tabindex="-1" role="main">
+    
+
+    <div class="page-inner">
+        <div id="book-search-results">
+            <div class="search-noresults">
+                <section class="normal markdown-section">
+                    
+                        <h1 id="/windows/quick-windows-installation">Быстрая установка Windows</h1>
+                    
+
+                    <p>В этой статье мы рассмотрим вариант установки виндов в автоматическом режиме используя batch скрипты, а так же рассмотрим
+возможности их модификации.</p>
+
+<h2 id="создание-winpe-окружения">Создание WinPE окружения</h2>
+
+<p>идём на сайт <a href="https://docs.microsoft.com/ru-ru/windows-hardware/get-started/adk-install">docs.microsoft.com</a>(скачивание и установка Windows ADK) спускаемсь в раздел “Другие загружаемые файлы для ADK” и в табице скачиваем следующие пункты:</p>
+
+<ol>
+  <li>скачайте Windows ADK для Windows 10, версия 2004</li>
+  <li>скачайте надстройку Windows PE для ADK, версию 2004</li>
+</ol>
+
+<p>а затем по порядку установите. После установки в меню пуск выберете папку Windows Kits, а в ней “среда средств развертывания и работы с образами”. В этой командной строке набераем следующие команды:</p>
+<pre><code class="language-dos">
+C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools&gt;cd C:\
+
+C:\&gt;copype amd64 C:\winpe
+
+===================================================
+Creating Windows PE customization working directory
+
+    C:\winpe
+===================================================
+
+C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\Media\bootmgr
+...
+C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\Media\bootmgr.efi
+Скопировано файлов: 153.
+Скопировано файлов:         1.
+Скопировано файлов:         1.
+Скопировано файлов:         1.
+
+Success
+
+
+C:\&gt;
+</code></pre>
+
+<h2 id="получаем-файл-installwim">Получаем файл install.wim</h2>
+
+<p>перед тем как достать этот файл нам нужно сначало понять а что это такое вообще. Файл с раширением wim это сборник релизов операционных систем семейства Windows, тобишь упрощонно говоря архив со всеми фалами для развёртывания Windows. Подробнее на <a href="https://ru.wikipedia.org/wiki/Windows_Imaging_Format">ru.wikipedia.org</a>(Windows Imaging Format)</p>
+
+<p>Можно скачать с оф.сайта <a href="https://www.microsoft.com/ru-ru/software-download/windows10ISO">www.microsoft.com</a>(Скачать образ диска с Windows 10 (файл ISO)), ну или скачать с тореннтов суть от этого не изменяться.
+монтируем iso образ. И копируем из папки <code class="language-plaintext highlighter-rouge">sources</code> файл <code class="language-plaintext highlighter-rouge">insall.wim</code> или он может называться <code class="language-plaintext highlighter-rouge">install.esd</code> - это сжатый образ в папку <code class="language-plaintext highlighter-rouge">C:\winpe\media\sources</code>.</p>
+
+<h2 id="редактируем-файл-bootwim">Редактируем файл boot.wim</h2>
+
+<p>Для того чтобы его отредактировать его нужно смонтировать в папку. Для этого запускаем командную стоку с правами администратора.</p>
+<pre><code class="language-dos">C:\Windows\system32&gt;cd С:\
+
+С:\&gt;Dism /mount-wim /wimfile:С:\winpe\media\sources\boot.wim /index:1 /mountdir:С:\winpe\mount
+
+Cистема DISM
+Версия: 10.0.17763.1
+
+Подключение образа
+[==========================100.0%==========================]
+Операция успешно завершена.
+
+С:\&gt;
+</code></pre>
+
+<p>так нам надо отредактировать файл <code class="language-plaintext highlighter-rouge">C:\winpe\mount\Windows\System32\startnet.cmd</code> и для этого открываем <strong>Свойства -&gt; Безопастность -&gt; Изменить…</strong> выберете группу  <code class="language-plaintext highlighter-rouge">Пользователи</code> и ставим галочку на против <code class="language-plaintext highlighter-rouge">Изменение</code> ну и сохраняем изменения. Затем открываем его в блокноте (<strong>ПКМ -&gt; Изменить</strong>).</p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@echo <span class="na">off</span>
+@echo <span class="kd">wpeinit</span>
+<span class="kd">wpeinit</span>
+@echo <span class="k">call</span> <span class="nb">wpeutil</span> <span class="kd">UpdateBootInfo</span>
+<span class="nb">wpeutil</span> <span class="kd">UpdateBootInfo</span>
+<span class="kd">set</span> <span class="kd">WinPEREG</span><span class="o">=</span><span class="s2">"HKLM\System\CurrentControlSet\Control"</span>
+<span class="kd">set</span> <span class="kd">WinPEKey</span><span class="o">=</span><span class="kd">PEBootRamdiskSourceDrive</span>
+<span class="kd">set</span> <span class="kd">WinPESource</span><span class="o">=</span>
+
+<span class="k">for</span> <span class="na">/f </span><span class="s2">"skip=2 tokens=3"</span> <span class="vm">%%A</span> <span class="k">in</span> <span class="o">(</span><span class="s1">'call Reg query </span><span class="nv">%WinPEREG%</span><span class="s1"> /v </span><span class="nv">%WinPEKEY%</span><span class="s1">'</span><span class="o">)</span> <span class="k">do</span> <span class="kd">set</span> <span class="kd">WinPESource</span><span class="o">=</span><span class="vm">%%A</span>
+@echo <span class="kd">WinPESource</span> <span class="kd">is</span> <span class="kd">drive</span> <span class="kd">letter</span> <span class="s2">"</span><span class="nv">%WinPESource%</span><span class="s2">"</span>
+
+<span class="k">if</span> <span class="s2">"</span><span class="nv">%WinPESource%</span><span class="s2">"</span><span class="o">==</span><span class="s2">""</span> <span class="nb">echo</span> <span class="kd">Drive</span> <span class="kd">letter</span> <span class="kd">NOT</span> <span class="kd">found</span>.<span class="o">&amp;&amp;</span> <span class="k">call</span> <span class="nl">:FindDrive</span>
+<span class="nb">echo</span> <span class="kd">WinPESource</span> <span class="kd">is</span> <span class="s2">"</span><span class="nv">%WinPESource%</span><span class="s2">"</span>
+
+@echo <span class="k">call</span> <span class="nv">%WinPESource%</span><span class="kd">sources</span>\install.cmd
+<span class="k">call</span> <span class="nv">%WinPESource%</span><span class="kd">sources</span>\install.cmd
+<span class="k">goto</span> <span class="nl">:END</span>
+
+<span class="nl">:FindDrive</span>
+<span class="nb">echo</span> <span class="kd">Trying</span> <span class="kd">to</span> <span class="nb">find</span> <span class="kd">drive</span> <span class="kd">letter</span> <span class="kd">using</span> <span class="nb">diskpart</span>
+<span class="nb">echo</span> <span class="kd">Lis</span> <span class="kd">Vol</span><span class="o">&gt;</span><span class="kd">x</span>:\FindVol.txt
+<span class="nb">diskpart</span> <span class="na">/s </span><span class="kd">x</span>:\FindVol.txt&gt;x:\VolumeList.txt
+<span class="k">for</span> <span class="na">/f </span><span class="s2">"skip=8 tokens=3-4"</span> <span class="vm">%%A</span> <span class="k">in</span> <span class="o">(</span><span class="kd">x</span>:\VolumeList.txt<span class="o">)</span> <span class="k">do</span> <span class="o">(</span>
+<span class="nb">echo</span> <span class="kd">Checking</span> <span class="kd">drive</span> <span class="kd">letter</span> <span class="vm">%%A</span> <span class="kd">has</span> <span class="kd">volume</span> <span class="nb">label</span> <span class="kd">of</span> <span class="vm">%%B</span>
+<span class="k">if</span> <span class="na">/i </span><span class="s2">"</span><span class="vm">%%B</span><span class="s2">"</span><span class="o">==</span><span class="s2">"WINPE"</span> <span class="kd">set</span> <span class="kd">WinPESource</span><span class="o">=</span><span class="vm">%%A</span>
+<span class="o">)</span>
+<span class="kd">set</span> <span class="kd">WinPESource</span><span class="o">=</span><span class="nv">%WinPESource%</span>:\
+<span class="k">goto</span> <span class="nl">:EOF</span>
+
+<span class="nl">:END</span>
+</code></pre></div></div>
+<p>этот скрипт ищет флешку или диск с которого запущен и запускает скрипт из папки <code class="language-plaintext highlighter-rouge">sources\install.cmd</code>. Так и теперь можем заняться украшатьельством, а именно заменить фон рабочего стола для этого надо изменить <code class="language-plaintext highlighter-rouge">D:\winpe\mount\Windows\System32\winpe.jpg</code> но перед этим нужно сменить владельца и прова на файле. Все анологично файлу <code class="language-plaintext highlighter-rouge">startnet.cmd</code> за исключением того что нужно сменить владельца на группу <code class="language-plaintext highlighter-rouge">пользователи</code>. После изменений</p>
+
+<pre><code class="language-dos">C:\Windows\system32&gt;cd С:\
+
+С:\&gt;Dism /unmount-wim /mountdir:С:\winpe\mount /commit
+
+Cистема DISM
+Версия: 10.0.17763.1
+
+Сохранение образа
+[==========================100.0%==========================]
+Отключение образа
+[==========================100.0%==========================]
+Операция успешно завершена.
+
+С:\&gt;
+</code></pre>
+
+<h2 id="создаём-installcmd">Создаём install.cmd</h2>
+
+<p>Создаём скрипт по пути <code class="language-plaintext highlighter-rouge">C:\winpe\media\sources\install.cmd</code> с содержимым:</p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@echo <span class="na">off</span>
+<span class="nb">cls</span>
+<span class="nb">echo</span>  _       ___           __                                
+<span class="nb">echo</span> <span class="se">^|</span> <span class="se">^|</span>     / <span class="o">(</span>_<span class="o">)</span>___  ____/ /___ _      _______      <span class="se">^&lt;</span><span class="sb">`)
+echo </span><span class="se">^|</span><span class="sb"> </span><span class="se">^|</span><span class="sb"> /</span><span class="se">^|</span><span class="sb"> / / / __ \/ __  / __ \ </span><span class="se">^|</span><span class="sb"> /</span><span class="se">^|</span><span class="sb"> / / ___/       (//
+echo </span><span class="se">^|</span><span class="sb"> </span><span class="se">^|</span><span class="sb">/ </span><span class="se">^|</span><span class="sb">/ / / / / / /_/ / /_/ / </span><span class="se">^|</span><span class="sb">/ </span><span class="se">^|</span><span class="sb">/ (__  )         1
+echo </span><span class="se">^|</span><span class="sb">__/_______/ /_/\__,_______/____</span><span class="se">^|</span><span class="sb">__/____/  __        ____
+echo    / ____/___ ______/ /_   /  _/___  _____/ /_____ _/ / /
+echo   / /_  / __ `</span>/ ___/ __/   / // __ \/ ___/ __/ __ <span class="sb">`/ / / 
+echo  / __/ / /_/ (__  ) /_   _/ // / / (__  ) /_/ /_/ / / /  
+echo /_/    \__,_/____/\__/  /___/_/ /_/____/\__/\__,_/_/_/   
+echo Made by birdiecode
+echo.
+
+echo Check disks...
+echo.
+@echo.&gt;x:\listdisk.txt
+@echo list disk&gt;&gt;x:\listdisk.txt
+@echo exit&gt;&gt;x:\listdisk.txt
+call diskpart /s x:\listdisk.txt&gt;x:\Disks.txt
+
+for /f "skip=6 delims=" </span><span class="vm">%%A</span><span class="sb"> in (x:\Disks.txt) do (
+if "</span><span class="vm">%%A</span><span class="sb">"=="Leaving DiskPart..." goto :brfor1
+echo </span><span class="vm">%%A</span><span class="sb">
+)
+:brfor1
+echo.
+set /p DiskInst="Select the disk to install Windows: "
+
+echo Legacy installation
+@echo.&gt;x:\winpart.txt
+@echo select disk "</span><span class="nv">%DiskInst%</span><span class="sb">"&gt;&gt;x:\winpart.txt
+@echo clean&gt;&gt;x:\winpart.txt
+@echo create partition primary size=100&gt;&gt;x:\winpart.txt
+@echo active&gt;&gt;x:\winpart.txt
+@echo format quick fs=ntfs label="System"&gt;&gt;x:\winpart.txt
+@echo assign letter="S"&gt;&gt;x:\winpart.txt
+@echo create partition primary&gt;&gt;x:\winpart.txt
+@echo format quick fs=ntfs label="Windows"&gt;&gt;x:\winpart.txt
+@echo assign letter="W"&gt;&gt;x:\winpart.txt
+@echo exit&gt;&gt;x:\winpart.txt
+diskpart /s x:\winpart.txt
+
+echo Check Wim image...
+
+dism /apply-image /imagefile:</span><span class="nv">%WinPESource%</span><span class="sb">sources\install.wim /index:1 /applydir:W:\
+bootsect /nt60 S: /mbr
+W:
+cd W:\Windows\System32
+bcdboot W:\Windows /s S: /f BIOS
+exit
+</span></code></pre></div></div>
+
+<p>В нём имет смысал отредактировать строку <strong>46</strong></p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dism</span> <span class="na">/apply-image /imagefile</span>:<span class="nv">%WinPESource%</span><span class="kd">sources</span>\install.wim <span class="na">/index</span>:1 <span class="na">/applydir</span><span class="nl">:W</span>:\
+</code></pre></div></div>
+
+<p>а именно имя образа если оно отличаеться и <code class="language-plaintext highlighter-rouge">/index:</code>. Для того чтоб посмотреть список всех редакци в образе воспользуйтесь командой:</p>
+
+<pre><code class="language-dos">С:\&gt;Dism /Get-WimInfo /WimFile:С:\winpe\media\sources\install.wim
+
+Cистема DISM
+Версия: 10.0.17763.1
+
+Сведения об образе : С:\winpe\media\sources\install.wim
+
+Индекс: 1
+Имя: Windiws ltsc
+Описание: Windiws ltsc
+Размер (байт): 9 451 993 100
+
+Операция успешно завершена.
+
+С:\&gt;
+</code></pre>
+
+<h2 id="создание-загрузочного-насителя">Создание загрузочного насителя</h2>
+
+<p>Действия выполняются из под командной строки “среда средств развертывания и работы с образами”</p>
+
+<h3 id="usb-накопителя">USB-накопителя</h3>
+
+<p>И вот долгожданный момент запись на флешку</p>
+
+<pre><code class="language-dos">С:\&gt;MakeWinPEMedia /UFD C:\winpe F:
+</code></pre>
+<h3 id="iso-образ">ISO образ</h3>
+
+<pre><code class="language-dos">С:\&gt;MakeWinPEMedia /ISO C:\winpe C:\winpe\WinPE_amd64.iso
+</code></pre>
+
+<blockquote class="block-tip">
+  <p>Имеет смысал изменить имя образ воспользуйтесь утилитой <code class="language-plaintext highlighter-rouge">UltraISO</code> и/или изменить строку <strong>26</strong> c <code class="language-plaintext highlighter-rouge">WINPE</code> на то что вам нравиться или <code class="language-plaintext highlighter-rouge">DVD_DISK</code> в файле <code class="language-plaintext highlighter-rouge">C:\winpe\mount\Windows\System32\startnet.cmd</code> главное что-бы имя было одинаково ведь это один из способов найти установочный наситель.</p>
+</blockquote>
+
+<h2 id="ресурсы-что-я-использовал">ресурсы что я использовал</h2>
+
+<ul>
+  <li>http://scriptcoding.ru/2013/08/19/cmd-for/</li>
+  <li>https://celitel.info/klad/nhelp/helpbat.php?dcmd=usf_ecran</li>
+  <li>https://www.bootdev.ru/2018/08/Installing-Windows-from-WIM-or-ESD-image.html#ManualInstall</li>
+  <li>https://www.bootdev.ru/2019/05/Repair-Windows-Bootloader.html</li>
+  <li>https://computer76.ru/2019/07/18/legacy-%D0%B8%D0%BB%D0%B8-uefi/</li>
+  <li>https://winkomp.ru/fajly-cmd-rabota-s-fajlami-iz-konsoli-chast-2</li>
+  <li>https://docs.microsoft.com/ru-ru/windows-hardware/manufacture/desktop/winpe-mount-and-customize#addwallpaper</li>
+  <li>http://pyatilistnik.org/kak-v-cmd-posmotret-vse-diski-windows/</li>
+  <li>https://habr.com/ru/post/301534/</li>
+  <li>https://linux-tips.com/t/booting-from-an-iso-image-using-qemu/136/2</li>
+  <li>https://docs.microsoft.com/ru-ru/windows-hardware/manufacture/desktop/wpeinit-and-startnetcmd-using-winpe-startup-scripts</li>
+  <li>https://windowsnotes.ru/other/izvlekaem-fajly-iz-ustanovochnogo-obraza-windows/</li>
+  <li>http://pyatilistnik.org/sozdaem-svoyu-sborku-windows-10-3-chast/</li>
+  <li>https://windowstips.ru/kak-sozdat-svoyu-sborku-windows-10</li>
+  <li>https://habr.com/ru/post/181261/</li>
+  <li>https://ru.wikipedia.org/wiki/Windows_Imaging_Format</li>
+  <li>https://remontcompa.ru/windows/sborki-i-distributivy-windows/1521-kak-sozdat-svoyu-sborku-windows-s-pomoschyu-programmy-ntlite.html</li>
+  <li>https://habr.com/ru/post/395629/</li>
+  <li>https://www.white-windows.ru/kak-otredaktirovat-reestr-windows-v-obraze-sistemy/</li>
+  <li>https://misterit.ru/kak-otkryt-reestr-windows.html</li>
+  <li>https://docs.microsoft.com/ru-ru/windows-hardware/get-started/adk-offline-install</li>
+  <li>http://pyatilistnik.org/kak-v-cmd-posmotret-vse-diski-windows/</li>
+  <li>https://github.com/hightemp/docWindows/blob/master/articles/%D0%9E%D1%88%D0%B8%D0%B1%D0%BA%D0%B8%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20OOBE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%B5%D1%80%D0%B2%D0%BE%D0%B9%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B5%20Windows%2010%20%D0%B8%20%D0%BA%D0%B0%D0%BA%20%D0%B8%D1%85%20%D1%83%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%82%D1%8C.md</li>
+  <li>https://990x.top/oobe-chto-eto-za-programma-windeploy-exe-otvet.html</li>
+  <li>https://meshok-sovetov.ru/oobesettings-windows-10-chto-delat/</li>
+  <li>https://sysadmins.ru/topic183540.html</li>
+  <li>https://windowstips.ru/kak-sozdat-svoyu-sborku-windows-10</li>
+  <li>https://meshok-sovetov.ru/redaktirovanie-reestra-drugoy-windows/</li>
+  <li>https://ab57.ru/cmdlist/reg.html</li>
+  <li>https://docs.microsoft.com/ru-ru/windows-hardware/manufacture/desktop/winpe-create-usb-bootable-drive</li>
+</ul>
+</section>
+            </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div></div>
+    </div>
+</div>
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script
+  type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
+                        <a href="/" class="navigation navigation-prev navigation-unique" aria-label="Previous page: birdiecode">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    
+
+                    
+                </div>
+            </div>
+
+            <script>
+            var gitbook = gitbook || [];
+            gitbook.push(function() {
+                gitbook.page.hasChanged({
+    "page": {
+        "title": "Introduction",
+        "level": "1.1",
+        "depth": 1,
+        
+        "dir": "ltr"
+    },    "config": {
+        "plugins": ["fontsettings", "highlight", "livereload", "lunr", "search", "sharing", "theme-default", "livereload"],
+        "styles": {
+            "ebook": "styles/ebook.css",
+            "epub": "styles/epub.css",
+            "mobi": "styles/mobi.css",
+            "pdf": "styles/pdf.css",
+            "print": "styles/print.css",
+            "website": "styles/website.css"
+        },
+        "pluginsConfig": {
+            "fontsettings": {
+                "family": "sans",
+                "size": 2,
+                "theme": "white"
+            },
+            "highlight": {},
+            "livereload": {},
+            "lunr": {
+                "ignoreSpecialCharacters": false,
+                "maxIndexSize": 1000000
+            },
+            "search": {},            "sharing": {
+                "all": ["facebook", "google", "twitter", "weibo", "instapaper", "github", "telegram"],
+                "facebook": true,
+                "google": false,
+                "github": true,
+                "github_link": "https://github.com",
+                "telegram": false,
+                "telegram_link": "https://t.me",
+                "instapaper": false,
+                "twitter": true,
+                "vk": false,
+                "weibo": false
+            },
+"theme-default": {
+                "showLevel": false,
+                "styles": {
+                    "ebook": "styles/ebook.css",
+                    "epub": "styles/epub.css",
+                    "mobi": "styles/mobi.css",
+                    "pdf": "styles/pdf.css",
+                    "print": "styles/print.css",
+                    "website": "styles/website.css"
+                }
+            }
+        },
+        "theme": "default",
+        "author": "Tao He",
+        "pdf": {
+            "pageNumbers": true,
+            "fontSize": 12,
+            "fontFamily": "Arial",
+            "paperSize": "a4",
+            "chapterMark": "pagebreak",
+            "pageBreaksBefore": "/",
+            "margin": {
+                "right": 62,
+                "left": 62,
+                "top": 56,
+                "bottom": 56
+            }
+        },
+        "structure": {
+            "langs": "LANGS.md",
+            "readme": "README.md",
+        },
+        "variables": {},
+        "title": "birdiecode",
+        "language": "en",
+        "gitbook": "*"
+    },
+    "file": {
+        "path": "_posts/2019-04-27-quick-windows-installation.md",
+        "mtime": "2019-04-27 00:00:00 +0300",
+        "type": "markdown"
+    },
+    "gitbook": {
+        "version": "3.2.3",
+        "time": "2023-07-24 11:30:31 +0300"
+    },
+    "basePath": "",
+    "book": {
+        "language": ""
+    }
+});
+            });
+            </script>
+        </div><script src="/assets/gitbook/gitbook.js"></script>
+<script src="/assets/gitbook/theme.js"></script>
+
+<script src="/assets/gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-sharing/buttons.js"></script>
+
+<!-- <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+<script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+<script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+<script src="../gitbook/gitbook-plugin-search/search.js"></script> -->
+
+<script src="/assets/gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-search-pro/search.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+
+</body>
+</html>
